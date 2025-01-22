@@ -1,0 +1,7 @@
+[user]
+	email = harshvaish2003@gmail.com
+	name = harsh
+[pull]
+	rebase = false
+[credential]
+	helper = store
