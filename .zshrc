@@ -197,3 +197,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # postgres
 export PATH=$PATH:/usr/lib/postgresql/17/bin
+
+# docker - enabling docker buildkit
+export DOCKER_BUILDKIT=1
