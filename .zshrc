@@ -200,3 +200,9 @@ export PATH=$PATH:/usr/lib/postgresql/17/bin
 
 # docker - enabling docker buildkit
 export DOCKER_BUILDKIT=1
+
+# local scripts
+PATH="$PATH":"$HOME/.local/scripts/"
+
+# macro for tmux-sessionizer
+bindkey -s ^f "tmux-sessionizer\n"
