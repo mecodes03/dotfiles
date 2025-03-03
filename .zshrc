@@ -85,11 +85,11 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-	git
-    fzf
-	zsh-autosuggestions
-    zsh-interactive-cd
-    zsh-syntax-highlighting
+  git
+  fzf
+  zsh-autosuggestions
+  zsh-interactive-cd
+  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -130,6 +130,7 @@ alias C:="cd /mnt/c"
 alias d="cd /mnt/d"
 alias c="cd /mnt/c"
 
+alias vim="nvim"
 alias ll="ls -la"
 alias update="sudo apt update && sudo apt upgrade"
 
