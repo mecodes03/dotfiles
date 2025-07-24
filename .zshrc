@@ -130,7 +130,7 @@ alias C:="cd /mnt/c"
 alias d="cd /mnt/d"
 alias c="cd /mnt/c"
 
-alias vim="nvim"
+# alias vim="nvim"
 alias ll="ls -la"
 alias update="sudo apt update && sudo apt upgrade"
 
@@ -207,3 +207,19 @@ PATH="$PATH":"$HOME/.local/scripts/"
 
 # macro for tmux-sessionizer
 bindkey -s ^f "tmux-sessionizer\n"
+
+
+# platform-tools
+export PATH="$HOME/platform-tools:$PATH"
+
+# solana 
+export PATH="/home/mecodes/.local/share/solana/install/active_release/bin:$PATH"
+
+. "$HOME/.cargo/env"
+
+export PATH="$PATH:/home/mecodes/.foundry/bin"
+
+export PATH="$PATH:/home/mecodes/.foundry/bin"
+
+# To customize prompt, run `p10k configure` or edit ~/dotfiles/.p10k.zsh.
+[[ ! -f ~/dotfiles/.p10k.zsh ]] || source ~/dotfiles/.p10k.zsh
