@@ -212,7 +212,7 @@ bindkey -s ^f "tmux-sessionizer\n"
 # platform-tools
 export PATH="$HOME/platform-tools:$PATH"
 
-# solana 
+# solana
 export PATH="/home/mecodes/.local/share/solana/install/active_release/bin:$PATH"
 
 . "$HOME/.cargo/env"
