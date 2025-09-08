@@ -130,7 +130,6 @@ alias C:="cd /mnt/c"
 alias d="cd /mnt/d"
 alias c="cd /mnt/c"
 
-# alias vim="nvim"
 alias ll="ls -la"
 alias update="sudo apt update && sudo apt upgrade"
 
@@ -223,3 +222,17 @@ export PATH="$PATH:/home/mecodes/.foundry/bin"
 
 # To customize prompt, run `p10k configure` or edit ~/dotfiles/.p10k.zsh.
 [[ ! -f ~/dotfiles/.p10k.zsh ]] || source ~/dotfiles/.p10k.zsh
+
+# ripgrep
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
+
+# determines search program for fzf
+if type ag &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
+fi
+
+# refer rg over ag
+if type rg &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files --hidden'
+fi
