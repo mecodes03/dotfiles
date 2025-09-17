@@ -119,6 +119,7 @@ source $ZSH/oh-my-zsh.sh
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
 #
+
 # Example aliases
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
@@ -132,6 +133,8 @@ alias c="cd /mnt/c"
 
 alias ll="ls -la"
 alias update="sudo apt update && sudo apt upgrade"
+
+alias k="kubectl"
 
 # Change to WSL user's home directory if starting in Windows home directory
 if [[ $PWD == /mnt/c/Users/HP ]]; then
@@ -236,3 +239,6 @@ fi
 if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files --hidden'
 fi
+
+# enable eksctl completions
+fpath=($fpath ~/.zsh/completion)
