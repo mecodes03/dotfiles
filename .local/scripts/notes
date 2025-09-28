@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+NOTES_DIR=~/Notes
+current_date_note=$(date +"%d-%b-%y").md
+yesterday_date_note=$(date -d "yesterday" +"%d-%b-%y").md
+
+# template for new notes
+create_template() {
+    local file=$1
+    cat > "$file" <<EOF
+# $(date -d "$(basename "$file" .md)" +"%d %b %Y")
+
+## ✅ Done
+-
+
+## ❌ Not Done
+-
+
+## 📚 Learned
+-
+EOF
+}
+
+# helper: ensure a note exists, return its path
+ensure_note() {
+    local note_date=$1
+    local file="$NOTES_DIR/$note_date"
+
+    if [[ ! -f "$file" ]]; then
+        echo "Creating note: $note_date" >&2
+        create_template "$file"
+    else
+        echo "Using existing note: $note_date" >&2
+    fi
+
+    echo "$file"
+}
+
+
+# parse args
+if [ $# -eq 0 ]; then
+    echo "no args"
+    selected=$(find "$NOTES_DIR" -mindepth 1 -maxdepth 1 -type f -printf "%f\n" | fzf)
+else
+    case "$1" in
+        today|-t)
+            selected=$(ensure_note "$current_date_note")
+            ;;
+        yesterday|-y)
+            selected=$(ensure_note "$yesterday_date_note")
+            ;;
+        *)
+            selected=$1
+            ;;
+    esac
+fi
+
+# if nothing selected, exit
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+selected_name=$(basename "$selected" | tr . _)
+
+vim "$selected"
