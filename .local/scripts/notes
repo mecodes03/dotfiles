@@ -110,50 +110,15 @@ create_topic() {
 
 # find and select notes with fzf
 browse_notes() {
-    # Create a list of all notes with better formatting
-    local selected=$(
-        find "$NOTES_DIR" -type f -name "*.md" 2>/dev/null | \
-        while read -r file; do
-            # Get relative path from NOTES_DIR
-            rel_path="${file#$NOTES_DIR/}"
-
-            # Format display based on file type
-            if [[ "$rel_path" == */note.md ]]; then
-                # Main daily note
-                date_part=$(dirname "$rel_path")
-                echo "📅 $date_part (main)"
-            elif [[ "$rel_path" == */topics/*.md ]]; then
-                # Topic note
-                date_part=$(echo "$rel_path" | cut -d'/' -f1)
-                topic_part=$(basename "$rel_path" .md)
-                echo "📚 $date_part → $topic_part"
-            else
-                # Other notes
-                echo "📄 $rel_path"
-            fi
-        done | \
-        fzf --preview 'echo {} | sed "s/^[^ ]* //" | sed "s/ (main)$/\/note.md/" | sed "s/ → /\/topics\//" | sed "s/$/.md/" | xargs -I {} find '"$NOTES_DIR"' -type f -path "*{}*" 2>/dev/null | head -1 | xargs cat' \
-            --preview-window=right:60%:wrap
-    )
-
-    # Convert selection back to file path
-    if [[ -n "$selected" ]]; then
-        if [[ "$selected" == *"(main)"* ]]; then
-            # Main note selected
-            date_part=$(echo "$selected" | sed 's/📅 //' | sed 's/ (main)//')
-            echo "$NOTES_DIR/$date_part/note.md"
-        elif [[ "$selected" == *"→"* ]]; then
-            # Topic note selected
-            date_part=$(echo "$selected" | sed 's/📚 //' | cut -d' ' -f1)
-            topic_part=$(echo "$selected" | sed 's/.*→ //')
-            echo "$NOTES_DIR/$date_part/topics/$topic_part.md"
-        else
-            # Other format
-            rel_path=$(echo "$selected" | sed 's/📄 //')
-            echo "$NOTES_DIR/$rel_path"
-        fi
+    find "$NOTES_DIR" -type f -name "*.md" 2>/dev/null \
+        | sed "s|$NOTES_DIR/||" \
+        | fzf --preview "cat $NOTES_DIR/{}" \
+              --preview-window=right:60%:wrap
+    if [[ -n "$REPLY" ]]; then
+        echo "$NOTES_DIR/$REPLY"
     fi
 }
+
 
 # Parse arguments
 if [ $# -eq 0 ]; then
