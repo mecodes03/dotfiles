@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 NOTES_DIR=~/Notes
-current_date_note=$(date +"%d-%b-%y").md
-yesterday_date_note=$(date -d "yesterday" +"%d-%b-%y").md
+current_date=$(date +"%Y-%m-%d")
+yesterday_date=$(date -d "yesterday" +"%Y-%m-%d")
 
-# template for new notes
-create_template() {
+# template for main daily note
+create_daily_template() {
     local file=$1
     cat > "$file" <<EOF
-# $(date -d "$(basename "$file" .md)" +"%d %b %Y")
+# $(date +"%A, %B %d, %Y")
 
 ## ✅ Done
 -
@@ -18,48 +18,220 @@ create_template() {
 
 ## 📚 Learned
 -
+
+## 💡 Quick Notes
+-
+
+## 📎 Today's Topics
+<!-- Links to detailed notes in topics/ folder -->
+-
+
+---
+*Hours: X | Energy: ⚡⚡⚡*
 EOF
 }
 
-# helper: ensure a note exists, return its path
-ensure_note() {
-    local note_date=$1
-    local file="$NOTES_DIR/$note_date"
+# template for topic notes
+create_topic_template() {
+    local file=$1
+    local topic_name=$2
+    cat > "$file" <<EOF
+# $topic_name
+*Created: $(date +"%Y-%m-%d %H:%M")*
 
-    if [[ ! -f "$file" ]]; then
-        echo "Creating note: $note_date" >&2
-        create_template "$file"
-    else
-        echo "Using existing note: $note_date" >&2
-    fi
+## Summary
 
-    echo "$file"
+
+## Details
+
+
+## Code Examples
+\`\`\`bash
+# example
+\`\`\`
+
+## Resources
+-
+
+## Questions/TODOs
+-
+
+---
+[← Back to daily note](../note.md)
+EOF
 }
 
+# ensure daily folder structure exists
+ensure_daily_folder() {
+    local date_folder=$1
+    local folder_path="$NOTES_DIR/$date_folder"
+    local main_note="$folder_path/note.md"
+    local topics_folder="$folder_path/topics"
 
-# parse args
+    # Create folder structure if doesn't exist
+    if [[ ! -d "$folder_path" ]]; then
+        echo "Creating folder: $date_folder" >&2
+        mkdir -p "$folder_path"
+        mkdir -p "$topics_folder"
+        create_daily_template "$main_note"
+    elif [[ ! -f "$main_note" ]]; then
+        echo "Creating main note for: $date_folder" >&2
+        create_daily_template "$main_note"
+    fi
+
+    # Ensure topics folder exists
+    [[ ! -d "$topics_folder" ]] && mkdir -p "$topics_folder"
+
+    echo "$main_note"
+}
+
+# create a new topic note for today
+create_topic() {
+    local topic_name=$1
+    local today_folder="$NOTES_DIR/$current_date"
+    local topics_folder="$today_folder/topics"
+
+    # Ensure today's folder exists
+    ensure_daily_folder "$current_date" > /dev/null
+
+    # Sanitize topic name for filename
+    local filename=$(echo "$topic_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '-').md
+    local filepath="$topics_folder/$filename"
+
+    if [[ -f "$filepath" ]]; then
+        echo "Topic already exists: $filepath" >&2
+    else
+        echo "Creating topic note: $topic_name" >&2
+        create_topic_template "$filepath" "$topic_name"
+    fi
+
+    echo "$filepath"
+}
+
+# find and select notes with fzf
+browse_notes() {
+    # Create a list of all notes with better formatting
+    local selected=$(
+        find "$NOTES_DIR" -type f -name "*.md" 2>/dev/null | \
+        while read -r file; do
+            # Get relative path from NOTES_DIR
+            rel_path="${file#$NOTES_DIR/}"
+
+            # Format display based on file type
+            if [[ "$rel_path" == */note.md ]]; then
+                # Main daily note
+                date_part=$(dirname "$rel_path")
+                echo "📅 $date_part (main)"
+            elif [[ "$rel_path" == */topics/*.md ]]; then
+                # Topic note
+                date_part=$(echo "$rel_path" | cut -d'/' -f1)
+                topic_part=$(basename "$rel_path" .md)
+                echo "📚 $date_part → $topic_part"
+            else
+                # Other notes
+                echo "📄 $rel_path"
+            fi
+        done | \
+        fzf --preview 'echo {} | sed "s/^[^ ]* //" | sed "s/ (main)$/\/note.md/" | sed "s/ → /\/topics\//" | sed "s/$/.md/" | xargs -I {} find '"$NOTES_DIR"' -type f -path "*{}*" 2>/dev/null | head -1 | xargs cat' \
+            --preview-window=right:60%:wrap
+    )
+
+    # Convert selection back to file path
+    if [[ -n "$selected" ]]; then
+        if [[ "$selected" == *"(main)"* ]]; then
+            # Main note selected
+            date_part=$(echo "$selected" | sed 's/📅 //' | sed 's/ (main)//')
+            echo "$NOTES_DIR/$date_part/note.md"
+        elif [[ "$selected" == *"→"* ]]; then
+            # Topic note selected
+            date_part=$(echo "$selected" | sed 's/📚 //' | cut -d' ' -f1)
+            topic_part=$(echo "$selected" | sed 's/.*→ //')
+            echo "$NOTES_DIR/$date_part/topics/$topic_part.md"
+        else
+            # Other format
+            rel_path=$(echo "$selected" | sed 's/📄 //')
+            echo "$NOTES_DIR/$rel_path"
+        fi
+    fi
+}
+
+# Parse arguments
 if [ $# -eq 0 ]; then
-    echo "no args"
-    selected=$(find "$NOTES_DIR" -mindepth 1 -maxdepth 1 -type f -printf "%f\n" | fzf)
+    # No args - browse with fzf
+    selected=$(browse_notes)
 else
     case "$1" in
         today|-t)
-            selected=$(ensure_note "$current_date_note")
+            selected=$(ensure_daily_folder "$current_date")
             ;;
         yesterday|-y)
-            selected=$(ensure_note "$yesterday_date_note")
+            selected=$(ensure_daily_folder "$yesterday_date")
+            ;;
+        topic)
+            # Create a new topic for today
+            if [[ -z "$2" ]]; then
+                echo "Usage: notes topic \"topic-name\"" >&2
+                exit 1
+            fi
+            selected=$(create_topic "$2")
+            ;;
+        list|-l)
+            # List today's topics
+            topics_dir="$NOTES_DIR/$current_date/topics"
+            if [[ -d "$topics_dir" ]]; then
+                echo "Today's topics:" >&2
+                ls -1 "$topics_dir" 2>/dev/null | sed 's/.md$//' | sed 's/^/  - /'
+            else
+                echo "No topics for today yet" >&2
+            fi
+            exit 0
+            ;;
+        help|-h)
+            cat <<HELP
+Notes Management Script
+
+Usage:
+  notes                  Browse all notes with fzf
+  notes today|-t         Open today's main note
+  notes yesterday|-y     Open yesterday's main note
+  notes topic "name"     Create a new topic note for today
+  notes list|-l          List today's topics
+  notes help|-h          Show this help
+
+Folder Structure:
+  ~/Notes/
+    YYYY-MM-DD/
+      note.md          Main daily note
+      topics/          Topic-specific notes
+        docker.md
+        vim-tips.md
+        ...
+
+Keybinds (in .zshrc):
+  Ctrl+N - Open today's note
+HELP
+            exit 0
             ;;
         *)
-            selected=$1
+            # Direct path or date provided
+            if [[ -d "$NOTES_DIR/$1" ]]; then
+                selected="$NOTES_DIR/$1/note.md"
+            else
+                selected="$1"
+            fi
             ;;
     esac
 fi
 
-# if nothing selected, exit
+# Exit if nothing selected
 if [[ -z $selected ]]; then
     exit 0
 fi
 
-selected_name=$(basename "$selected" | tr . _)
-
-vim "$selected"
+# Open in vim
+if [[ -f "$selected" ]]; then
+    nvim "$selected"
+else
+    echo "File not found: $selected" >&2
+    exit 1
+fi

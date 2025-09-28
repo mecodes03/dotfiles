@@ -155,6 +155,8 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 # where snap servives resides (like sqlc)
 export PATH=$PATH:/snap/bin
 
+# vim to nvim alias
+alias vim='nvim'
 
 # so we don't have to use python3 everytime we run a python file.
 alias python='python3'
@@ -210,6 +212,16 @@ PATH="$PATH":"$HOME/.local/scripts/"
 # macro for tmux-sessionizer
 bindkey -s ^f "tmux-sessionizer\n"
 
+function _note_today() {
+  notes -t         # run your script with -t (today)
+  zle reset-prompt # refresh the prompt after running
+}
+
+zle -N _note_today
+bindkey '^n' _note_today
+
+# macro for notes
+# bindkey -s ^n "notes\n"
 
 # platform-tools
 export PATH="$HOME/platform-tools:$PATH"
