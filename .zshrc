@@ -2,10 +2,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -31,7 +27,15 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 # If argument is unknown but is name of a directory, cd into it
 setopt autocd
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
 
+# FZF-tab with optimized settings
 zinit light Aloxaf/fzf-tab
 zstyle ':completion:*:git-checkout:*' sort false
 # set descriptions format to enable group support
@@ -43,6 +47,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 # switch group using `,` and `.`
 zstyle ':fzf-tab:*' switch-group ',' '.'
 
+# Optimized plugin loading
 zinit wait lucid for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
   zdharma-continuum/fast-syntax-highlighting \
@@ -60,7 +65,7 @@ zinit wait lucid for \
       bindkey '^s' autosuggest-clear" \
   zsh-users/zsh-autosuggestions
 
-# Git plugin from Oh My Zsh - loaded when entering a git repository
+# Git plugin from Oh My Zsh - loaded when entering a git repository (Lazy Loading)
 zinit ice wait lucid
 zinit snippet OMZP::git
 
@@ -80,15 +85,9 @@ HISTSIZE=5000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
 
 
+# Key bindings
 bindkey "^[[1;5C" forward-word      # Ctrl+Right
 bindkey "^[[1;5D" backward-word     # Ctrl+Left
 bindkey "^[[1;5A" up-line-or-history    # Ctrl+Up
@@ -103,7 +102,6 @@ tmux-sessionizer-widget() {
     BUFFER="tmux-sessionizer"
     zle accept-line
 }
-
 zle -N tmux-sessionizer-widget
 bindkey '^f' tmux-sessionizer-widget
 
@@ -112,70 +110,56 @@ function _note_today() {
   notes -t         # run your script with -t (today)
   zle reset-prompt # refresh the prompt after running
 }
-
 zle -N _note_today
 bindkey '^n' _note_today
 
 # PATHS : ---------------------------------------------------------------------
 # rust
 . "$HOME/.cargo/env"
-
 # Go
 export PATH=$PATH:/usr/local/go/bin
-
 # solana
 export PATH="/home/mecodes/.local/share/solana/install/active_release/bin:$PATH"
 
-# neoviim path
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# commenting below lines out since we're using zinit plugin for loading nvm
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Nodejs Version Manager
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# bun completions
-[ -s "/home/mecodes/.bun/_bun" ] && source "/home/mecodes/.bun/_bun"
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
 # fzf
 export PATH="$HOME/.fzf/bin:$PATH"
-
 #zoxide
 export PATH="$HOME/.local/bin:$PATH"
-
 # local scripts
 PATH="$PATH":"$HOME/.local/scripts/"
 
-# PATHS END : -----------------------------------------------------------------
 
-# ALIASES: --------------------------------------------------------------------
+# Aliases
 alias ls="eza"
 alias lsa="eza -la"
 alias rmrf='rm -rf'
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
 alias python3="python"
-
 alias d="cd /mnt/d"
 alias c="cd /mnt/c"
-
 alias k="kubectl"
 alias vim="nvim"
 alias wsl="wsl.exe"
 alias terminate="wsl --terminate Ubuntu-24.04"
 alias winsetting="nvim /mnt/c/Users/HP/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
 alias bat="batcat"
-# ALIASES END : ---------------------------------------------------------------
 
-# INTEGRATIONS --------------------------
-# fzf
-source <(fzf --zsh)
-# zoxide
-eval "$(zoxide init --cmd cd zsh)"
+# Integrations (only if commands exist to avoid errors)
+command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init --cmd cd zsh)"
+
+# Load p10k config
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Bun completions (if exists)
+[ -s "/home/mecodes/.bun/_bun" ] && source "/home/mecodes/.bun/_bun"
