@@ -70,10 +70,10 @@ zinit ice wait lucid
 zinit snippet OMZP::git
 
 # Load Node version manager only when needed
-export NVM_LAZY_LOAD=true
-export NVM_COMPLETION=true
-zinit ice wait lucid
-zinit light lukechilds/zsh-nvm
+# export NVM_LAZY_LOAD=true
+# export NVM_COMPLETION=true
+# zinit ice wait lucid
+# zinit light lukechilds/zsh-nvm
 
 zinit cdreplay -q
 
@@ -114,6 +114,8 @@ zle -N _note_today
 bindkey '^n' _note_today
 
 # PATHS : ---------------------------------------------------------------------
+# neoviim path
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 # rust
 . "$HOME/.cargo/env"
 # Go
@@ -121,9 +123,8 @@ export PATH=$PATH:/usr/local/go/bin
 # solana
 export PATH="/home/mecodes/.local/share/solana/install/active_release/bin:$PATH"
 
-# commenting below lines out since we're using zinit plugin for loading nvm
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Nodejs Version Manager
 export NVM_DIR="$HOME/.nvm"
