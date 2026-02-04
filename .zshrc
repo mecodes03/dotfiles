@@ -86,7 +86,6 @@ HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
 
-
 # Key bindings
 bindkey "^[[1;5C" forward-word      # Ctrl+Right
 bindkey "^[[1;5D" backward-word     # Ctrl+Left
@@ -133,7 +132,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 # fzf
 export PATH="$HOME/.fzf/bin:$PATH"
-#zoxide
+# zoxide
 export PATH="$HOME/.local/bin:$PATH"
 # local scripts
 PATH="$PATH":"$HOME/.local/scripts/"
@@ -145,12 +144,12 @@ alias lsa="eza -la"
 alias rmrf='rm -rf'
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
-alias python3="python"
+alias python="python3"
 alias d="cd /mnt/d"
 alias c="cd /mnt/c"
 alias k="kubectl"
 alias vim="nvim"
-alias wsl="wsl.exe"
+alias wsl="/mnt/c/Windows/wsl.exe"
 alias terminate="wsl --terminate Ubuntu-24.04"
 alias winsetting="nvim /mnt/c/Users/HP/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
 alias bat="batcat"
@@ -164,3 +163,4 @@ command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init --cmd cd zsh)"
 
 # Bun completions (if exists)
 [ -s "/home/mecodes/.bun/_bun" ] && source "/home/mecodes/.bun/_bun"
+
