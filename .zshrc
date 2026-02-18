@@ -94,9 +94,7 @@ bindkey "^[[1;5B" down-line-or-history  # Ctrl+Down
 
 # macro for tmux-sessionizer
 tmux-sessionizer-widget() {
-    # Clear the current line
     zle reset-prompt
-
     # Run in a subshell with proper terminal
     BUFFER="tmux-sessionizer"
     zle accept-line
