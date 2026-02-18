@@ -141,9 +141,7 @@ PATH="$PATH":"$HOME/.local/scripts/"
 # Aliases
 alias ls="eza"
 alias lsa="eza -la"
-alias rmrf='rm -rf'
-alias zshconfig="mate ~/.zshrc"
-alias ohmyzsh="mate ~/.oh-my-zsh"
+alias zshconfig="vim ~/.zshrc"
 alias python="python3"
 alias d="cd /mnt/d"
 alias c="cd /mnt/c"
