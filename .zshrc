@@ -11,21 +11,13 @@ if [ ! -d "$ZINIT_HOME" ]; then
     git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
-# Source/ Load init
+# Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
-
-# Set language/locale
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-# Set TimeZone
-export TZ='Asia/Kolkata'
 
 # Add in Powerlevel10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-
-# If argument is unknown but is name of a directory, cd into it
+# Shell options
 setopt autocd
 setopt appendhistory
 setopt sharehistory
@@ -35,19 +27,21 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
-# FZF-tab with optimized settings
-zinit light Aloxaf/fzf-tab
+# Completion styles (set before plugins load)
 zstyle ':completion:*:git-checkout:*' sort false
-# set descriptions format to enable group support
 zstyle ':completion:*:descriptions' format '[%d]'
-# set list-colors to enable filename colorizing
+zstyle ':completion:*:*:java*:*' complete-options true
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-# switch group using `,` and `.`
 zstyle ':fzf-tab:*' switch-group ',' '.'
 
-# Optimized plugin loading
+# Bun completions (must be before compinit)
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# zsh completions path
+fpath=(~/.local/share/zinit/completions $fpath)
+
+# Optimized plugin loading (turbo mode)
 zinit wait lucid for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
   zdharma-continuum/fast-syntax-highlighting \
@@ -63,32 +57,29 @@ zinit wait lucid for \
       bindkey '^e' autosuggest-execute; \
       bindkey '^a' autosuggest-toggle; \
       bindkey '^s' autosuggest-clear" \
-  zsh-users/zsh-autosuggestions
+  zsh-users/zsh-autosuggestions \
+  Aloxaf/fzf-tab
 
-# Git plugin from Oh My Zsh - loaded when entering a git repository (Lazy Loading)
+# Git plugin from Oh My Zsh (turbo loaded)
 zinit ice wait lucid
 zinit snippet OMZP::git
 
 # Load Node version manager only when needed
-# export NVM_LAZY_LOAD=true
-# export NVM_COMPLETION=true
-# zinit ice wait lucid
-# zinit light lukechilds/zsh-nvm
+export NVM_COMPLETION=true
+export NVM_SYMLINK_CURRENT="true"
+zinit wait lucid light-mode for lukechilds/zsh-nvm
 
 zinit cdreplay -q
 
-# Load completions
-autoload -Uz compinit
-
 # History
-HISTSIZE=5000
+HISTSIZE=50000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
 
 # Key bindings
-bindkey "^[[1;5C" forward-word      # Ctrl+Right
-bindkey "^[[1;5D" backward-word     # Ctrl+Left
+bindkey "^[[1;5C" forward-word          # Ctrl+Right
+bindkey "^[[1;5D" backward-word         # Ctrl+Left
 bindkey "^[[1;5A" up-line-or-history    # Ctrl+Up
 bindkey "^[[1;5B" down-line-or-history  # Ctrl+Down
 
@@ -110,31 +101,13 @@ function _note_today() {
 zle -N _note_today
 bindkey '^n' _note_today
 
-# PATHS : ---------------------------------------------------------------------
-# neoviim path
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-# rust
+clipimg() {
+  local file="${1:-clipboard.png}"
+  powershell.exe -command "\$img = Get-Clipboard -Format Image; if (\$img) { \$img.Save(\"$(wslpath -w "$(pwd)")\\${file}\") } else { Write-Host 'No image in clipboard' }"
+}
+
+# Rust
 . "$HOME/.cargo/env"
-# Go
-export PATH=$PATH:/usr/local/go/bin
-# solana
-export PATH="/home/mecodes/.local/share/solana/install/active_release/bin:$PATH"
-
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Nodejs Version Manager
-export NVM_DIR="$HOME/.nvm"
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-# fzf
-export PATH="$HOME/.fzf/bin:$PATH"
-# zoxide
-export PATH="$HOME/.local/bin:$PATH"
-# local scripts
-PATH="$PATH":"$HOME/.local/scripts/"
-
 
 # Aliases
 alias ls="eza"
