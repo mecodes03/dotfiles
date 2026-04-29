@@ -1,44 +1,75 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 # clipimg - save clipboard image to file
-# usage: clipimg [filename] [path]
+# usage: clipimg [-vp|-vw] [filename] [path]
 #
 # options:
-#   [filename]    output filename (default: clipboard.png)
-#   [path]        save location (default: current directory)
-#   -v, --vault   save to vault assets/imgs folder
-#   -h, --help    show this message
+#   [filename]      optional output filename (default: timestamp.png)
+#   [path]          optional save location (default: current directory)
+#   -vp, --vaultp   save to personal vault assets/imgs
+#   -vw, --vaultw   save to work vault assets/imgs
+#   -h, --help      show this message
 
-VAULT_PATH_PERSONAL="~/vault/personal/assets/imgs/"
-VAULT_PATH_WORK="~/vault/work/assets/imgs/"
+set -euo pipefail
+
+VAULT_PATH_PERSONAL="$HOME/vault/personal/assets/imgs"
+VAULT_PATH_WORK="$HOME/vault/work/assets/imgs"
 
 show_help() {
-  head -10 "$0" | grep "^#" | sed 's/^# \?//'
+  cat <<'EOF'
+clipimg - save clipboard image to file
+usage: clipimg [-vp|-vw] [filename] [path]
+
+options:
+  [filename]      optional output filename (default: timestamp.png)
+  [path]          optional save location (default: current directory)
+  -vp, --vaultp   save to personal vault assets/imgs
+  -vw, --vaultw   save to work vault assets/imgs
+  -h, --help      show this message
+EOF
   exit 0
 }
 
-case "$1" in
-  -h|--help) show_help ;;
-  -vw|--vaultw)
-    SAVE_DIR="$VAULT_PATH_WORK"
-    FILE="${2:-$(date +%Y%m%d-%H%M%S).png}"
-    ;;
-  -vp|--vaultp)
-    SAVE_DIR="$VAULT_PATH_PERSONAL"
-    FILE="${2:-$(date +%Y%m%d-%H%M%S).png}"
-    ;;
-  *)
-    SAVE_DIR="$(pwd)"
-    FILE="${1:-$(date +%Y%m%d-%H%M%S).png}"
-    ;;
-esac
+SAVE_DIR="$(pwd)"
+FILE=""
 
-WIN_PATH="$(wslpath -w "$SAVE_DIR")\\${FILE}"
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      show_help
+      ;;
+    -vp|--vaultp)
+      SAVE_DIR="$VAULT_PATH_PERSONAL"
+      ;;
+    -vw|--vaultw)
+      SAVE_DIR="$VAULT_PATH_WORK"
+      ;;
+    -*)
+      echo "unknown option: $1" >&2
+      exit 1
+      ;;
+    *)
+      if [[ -z "$FILE" ]]; then
+        FILE="$1"
+      else
+        SAVE_DIR="$1"
+      fi
+      ;;
+  esac
+  shift
+done
 
-powershell.exe -command "
+FILE="${FILE:-$(date +%Y%m%d-%H%M%S).png}"
+[[ "$FILE" == *.png ]] || FILE="${FILE}.png"
+
+mkdir -p "$SAVE_DIR"
+
+WIN_PATH="$(wslpath -w "$SAVE_DIR/$FILE")"
+
+powershell.exe -NoProfile -Command "
   \$img = Get-Clipboard -Format Image
-  if (\$img) {
+  if (\$null -ne \$img) {
     \$img.Save('$WIN_PATH')
-    Write-Host 'Saved: $FILE'
+    Write-Host 'Saved: $WIN_PATH'
   } else {
     Write-Host 'No image in clipboard'
     exit 1
