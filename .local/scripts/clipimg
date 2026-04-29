@@ -1,0 +1,46 @@
+#!/bin/bash
+# clipimg - save clipboard image to file
+# usage: clipimg [filename] [path]
+#
+# options:
+#   [filename]    output filename (default: clipboard.png)
+#   [path]        save location (default: current directory)
+#   -v, --vault   save to vault assets/imgs folder
+#   -h, --help    show this message
+
+VAULT_PATH_PERSONAL="~/vault/personal/assets/imgs/"
+VAULT_PATH_WORK="~/vault/work/assets/imgs/"
+
+show_help() {
+  head -10 "$0" | grep "^#" | sed 's/^# \?//'
+  exit 0
+}
+
+case "$1" in
+  -h|--help) show_help ;;
+  -vw|--vaultw)
+    SAVE_DIR="$VAULT_PATH_WORK"
+    FILE="${2:-$(date +%Y%m%d-%H%M%S).png}"
+    ;;
+  -vp|--vaultp)
+    SAVE_DIR="$VAULT_PATH_PERSONAL"
+    FILE="${2:-$(date +%Y%m%d-%H%M%S).png}"
+    ;;
+  *)
+    SAVE_DIR="$(pwd)"
+    FILE="${1:-$(date +%Y%m%d-%H%M%S).png}"
+    ;;
+esac
+
+WIN_PATH="$(wslpath -w "$SAVE_DIR")\\${FILE}"
+
+powershell.exe -command "
+  \$img = Get-Clipboard -Format Image
+  if (\$img) {
+    \$img.Save('$WIN_PATH')
+    Write-Host 'Saved: $FILE'
+  } else {
+    Write-Host 'No image in clipboard'
+    exit 1
+  }
+"
