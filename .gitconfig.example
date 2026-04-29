@@ -1,0 +1,7 @@
+[user]
+	email = <your-email@mail.com>
+	name = <your-name>
+[pull]
+	rebase = false
+[credential]
+	helper = store
