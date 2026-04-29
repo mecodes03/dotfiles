@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# vault - open obsidian vault in neovim
+# usage: vault [vault] [options]
+#
+# vaults:
+#   p, personal    open personal vault (default)
+#   w, work        open work vault
+#
+# options:
+#   -i, --inbox    open inbox directly
+#   -j, --journal  open today's journal
+#   -n, --new      create new note (prompts for name)
+#   -s, --search   open telescope search immediately
+#   -t, --todo     open todo section of inbox
+#   -h, --help     show this message
+
+PERSONAL="/home/mecodes/vault/personal"
+WORK="/home/mecodes/vault/work"
+VAULT=$PERSONAL  # default
+
+show_help() {
+  head -16 "$0" | grep "^#" | sed 's/^# \?//'
+  exit 0
+}
+
+# parse vault selection
+case "$1" in
+  p|personal)
+    VAULT=$PERSONAL
+    shift
+    ;;
+  w|work)
+    VAULT=$WORK
+    shift
+    ;;
+  -h|--help)
+    show_help
+    ;;
+esac
+
+# set current directory to $VAULT
+cd $VAULT
+
+# parse options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -i|--inbox)
+      nvim "$VAULT/inbox/inbox.md"
+      exit 0
+      ;;
+    -j|--journal)
+      DATE=$(date +%Y-%m-%d)
+      JOURNAL="$VAULT/journal/daily/$DATE.md"
+      if [ ! -f "$JOURNAL" ]; then
+        echo "---" > "$JOURNAL"
+        echo "date: $DATE" >> "$JOURNAL"
+        echo "tags: journal daily" >> "$JOURNAL"
+        echo "---" >> "$JOURNAL"
+        echo "" >> "$JOURNAL"
+        echo "## How I'm feeling" >> "$JOURNAL"
+        echo "" >> "$JOURNAL"
+        echo "## What I'm thinking about" >> "$JOURNAL"
+        echo "" >> "$JOURNAL"
+        echo "## Ideas today" >> "$JOURNAL"
+        echo "" >> "$JOURNAL"
+        echo "## One line summary" >> "$JOURNAL"
+      fi
+      nvim "$JOURNAL"
+      exit 0
+      ;;
+    -n|--new)
+      read -rp "Note name: " NAME
+      SLUG=$(echo "$NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+      DATE=$(date +%Y%m%d)
+      NOTE="$VAULT/notes/${DATE}-${SLUG}.md"
+      echo "# $NAME" > "$NOTE"
+      nvim "$NOTE"
+      exit 0
+      ;;
+    -s|--search)
+      nvim "$VAULT" -c "Telescope live_grep"
+      exit 0
+      ;;
+    -t|--todo)
+      nvim "$VAULT/inbox/inbox.md" -c "/- \[ \]"
+      exit 0
+      ;;
+    -h|--help)
+      show_help
+      ;;
+    *)
+      echo "unknown option: $1"
+      echo "run 'vault --help' for usage"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+# default — open vault root
+nvim "$VAULT"
+
