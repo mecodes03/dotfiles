@@ -1,0 +1,18 @@
+#!/bin/bash
+# vsync - sync vault to encrypted cloud
+# usage: vsync [push|pull]
+
+VAULT="~/vault"
+REMOTE="vault:"
+
+case "$1" in
+  push)
+    rclone sync $VAULT $REMOTE --progress
+    ;;
+  pull)
+    rclone sync $REMOTE $VAULT --progress
+    ;;
+  sync)
+    rclone bisync $VAULT $REMOTE --progress
+    ;;
+esac
