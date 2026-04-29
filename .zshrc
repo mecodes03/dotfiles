@@ -14,6 +14,9 @@ fi
 # history
 HISTFILE=~/.zsh_history
 
+# allow typing a directory path to change into it
+setopt AUTO_CD
+
 # back to insert
 export VI_MODE_ESC_INSERT="jk" # place before loading zap-zsh/vim
 
