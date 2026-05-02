@@ -3,7 +3,7 @@ alias zsh-update-plugins="find "$ZDOTDIR/plugins" -type d -exec test -e '{}/.git
 
 alias vim="nvim"
 alias nvimrc='nvim ~/.config/nvim/'
-alias zshconfig="nvim ~/.zshrc"
+alias zshrc='nvim ~/.zshrc'
 
 alias ls="eza"
 alias lsl="eza -l"

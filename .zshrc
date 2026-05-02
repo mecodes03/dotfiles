@@ -70,6 +70,10 @@ if [ -d "$FNM_PATH" ]; then
   eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 
+# Added by flyctl installer
+export FLYCTL_INSTALL="/home/mecodes/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
+
 # determines search program for fzf
 if type ag &> /dev/null; then
     export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
@@ -98,3 +102,4 @@ command -v zoxide &>/dev/null && eval "$(zoxide init --cmd cd zsh)"
 #     export BROWSER=$BROWSER:wsl-open
 #   fi
 # fi
+
