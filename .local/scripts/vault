@@ -9,7 +9,7 @@
 #
 # options:
 #   -i, --inbox    open inbox directly
-#   -j, --journal  open today's journal
+#   -d, --daily    open/create daily note
 #   -n, --new      create new note (prompts for name)
 #   -s, --search   open telescope search immediately
 #   -t, --todo     open todo section of inbox
@@ -17,7 +17,7 @@
 
 PERSONAL="/home/mecodes/vault/personal"
 WORK="/home/mecodes/vault/work"
-VAULT=$PERSONAL  # default
+VAULT=$WORK  # default
 
 show_help() {
   head -16 "$0" | grep "^#" | sed 's/^# \?//'
@@ -49,24 +49,13 @@ while [[ $# -gt 0 ]]; do
       nvim "$VAULT/inbox/inbox.md"
       exit 0
       ;;
-    -j|--journal)
+    -d|--daily)
       DATE=$(date +%Y-%m-%d)
-      JOURNAL="$VAULT/journal/daily/$DATE.md"
-      if [ ! -f "$JOURNAL" ]; then
-        echo "---" > "$JOURNAL"
-        echo "date: $DATE" >> "$JOURNAL"
-        echo "tags: journal daily" >> "$JOURNAL"
-        echo "---" >> "$JOURNAL"
-        echo "" >> "$JOURNAL"
-        echo "## How I'm feeling" >> "$JOURNAL"
-        echo "" >> "$JOURNAL"
-        echo "## What I'm thinking about" >> "$JOURNAL"
-        echo "" >> "$JOURNAL"
-        echo "## Ideas today" >> "$JOURNAL"
-        echo "" >> "$JOURNAL"
-        echo "## One line summary" >> "$JOURNAL"
+      DAILY="$VAULT/notes/daily/$DATE.md"
+      if [ ! -f "$DAILY" ]; then
+        nvim "$DAILY"
       fi
-      nvim "$JOURNAL"
+      nvim "$DAILY"
       exit 0
       ;;
     -n|--new)
