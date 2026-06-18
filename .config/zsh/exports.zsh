@@ -4,7 +4,6 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export TZ='Asia/Kolkata'
 
-# HISTFILE="$XDG_DATA_HOME"/zsh/history
 HISTSIZE=100000
 SAVEHIST=100000
 
@@ -26,3 +25,4 @@ export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/.local/scripts/"
 export PATH="$PATH:/mnt/c/Windows/System32/"
 export PATH="$PATH:/mnt/c/Windows/System32/WindowsPowerShell/v1.0"
+export PATH="$PATH:/home/mecodes/.local/share/coursier/bin"
