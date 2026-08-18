@@ -17,7 +17,7 @@ alias lsa="eza -la"
 # Tmux
 alias t="tmux"
 alias tls="t ls"
-alias tkl="t kill-session -t "
+alias tks="t kill-session -t "
 
 alias k="kubectl"
 alias python="python3"
