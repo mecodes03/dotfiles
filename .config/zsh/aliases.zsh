@@ -1,7 +1,6 @@
 #!/bin/sh
 
-alias wsl='wsl.exe'
-alias brave="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+alias brave="brave-browser"
 alias vim="nvim"
 
 # Configs
@@ -9,8 +8,9 @@ alias nvimrc='vim ~/.config/nvim/'
 alias zshrc='vim ~/.zshrc'
 alias zshconf='vim ~/.config/zsh/aliases.zsh'
 alias tmuxrc='vim ~/.config/tmux/tmux.conf'
-alias wezrc='vim /mnt/c/Users/HP/.wezterm.lua'
 alias winterset='vim ~/dotfiles/.config/windows-terminal/settings.json'
+alias wezrc='vim /mnt/c/Users/HP/.wezterm.lua'
+alias wezrc='vim /mnt/c/Users/HP/.wezterm.lua'
 
 # List Files
 alias ls="eza"
