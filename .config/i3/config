@@ -1,0 +1,72 @@
+include ./keymaps
+
+# colors: {{{
+set $colorp #d4be98
+set $colorf #282828
+set $coloru #ea6962
+
+# border colors:
+# class                 border    backgr.   text      indicator child_border
+client.focused          $colorpCC $colorpCC #ffffff   #ffffffCC $colorpCC
+client.focused_inactive $colorf   $colorf   #ffffff   #ffffffCC $colorf
+client.unfocused        $colorf   $colorf   #888888   #ffffffCC $colorf
+# }}}
+
+
+
+# borders and gaps: {{{
+default_border pixel 2
+gaps horizontal 2
+gaps inner 4
+
+smart_borders on
+smart_gaps on
+# }}}
+
+
+
+# keys: {{{
+# Alt key as $mod
+set $mod Mod1
+
+# h, j, k, l as arrow keys
+# set $up k
+# set $down j
+# set $left h
+# set $right l
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# only initiate a tiling drag when the modifier is held:
+tiling_drag modifier
+# }}}
+
+# other options: {{{
+# font for window titles and bars:
+font pango:JetBrainsMono NF 10
+
+workspace_auto_back_and_forth yes
+# }}}
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+     status_command i3status
+}
+
+
+# startup: {{{
+
+# Polybar (taking top space, seems overkill)
+# exec_always --no-startup-id pkill -SIGKILL -x polybar; polybar --log=warning >/dev/null
+
+exec --no-startup-id picom
+
+# set wallpaper
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/8931694.jpg
+
+exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id nm-applet
+# }}}
