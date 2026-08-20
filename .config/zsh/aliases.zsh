@@ -5,9 +5,9 @@ alias vim="nvim"
 
 # Configs
 alias nvimrc='vim ~/.config/nvim/'
-alias zshrc='vim ~/.zshrc'
-alias zshconf='vim ~/.config/zsh/aliases.zsh'
-alias tmuxrc='vim ~/.config/tmux/tmux.conf'
+alias zshrc='vim ~/dotfiles/.zshrc'
+alias zshconf='vim ~/dotfiles/.config/zsh/aliases.zsh'
+alias tmuxrc='vim ~/dotfiles/.config/tmux/tmux.conf'
 
 # List Files
 alias ls="eza"
