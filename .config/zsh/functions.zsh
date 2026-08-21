@@ -28,3 +28,8 @@ zle accept-line;
 }
 zle -N tms-widget
 bindkey '^f' tms-widget
+
+# play music
+play() {
+    mpv --no-video --ytdl-format=bestaudio "ytdl://ytsearch1:$*"
+}
