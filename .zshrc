@@ -100,3 +100,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # Added by Antigravity CLI installer
 export PATH="/home/harsh/.local/bin:$PATH"
+
+# kimi-code
+export PATH="/home/harsh/.kimi-code/bin:$PATH"
