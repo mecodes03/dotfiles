@@ -127,7 +127,7 @@ mode "resize" { # resize window (you can also use the mouse for that)
 bindsym $mod+r mode "resize"
 
 # Take Screenshot Using Flameshot
-bindsym Print exec flameshot gui --path /home/harsh/Pictures/sc
+bindsym Print exec flameshot gui --path /home/mecodes/Pictures/sc
 
 # FKeys
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
