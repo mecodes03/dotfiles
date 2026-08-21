@@ -9,6 +9,7 @@ alias zshrc='vim ~/dotfiles/.zshrc'
 alias zshconf='vim ~/dotfiles/.config/zsh/aliases.zsh'
 alias tmuxrc='vim ~/dotfiles/.config/tmux/tmux.conf'
 
+alias home="~"
 # List Files
 alias ls="eza"
 alias lsl="eza -l"
