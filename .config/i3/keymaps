@@ -3,6 +3,10 @@ set $terminal kitty
 bindsym $mod+Return exec --no-startup-id $terminal
 bindsym $mod+Shift+Return exec --no-startup-id $terminal --class "$terminal""-float"
 
+# spawn browser
+set $browser brave-browser
+bindsym $mod+b exec --no-startup-id $browser
+
 # kill window
 bindsym $mod+Shift+q kill
 # reload the configuration file
@@ -42,7 +46,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # stacks new window below
-bindsym $mod+b split h
+bindsym $mod+minus split h
 # stacks new window beside
 bindsym $mod+v split v
 
