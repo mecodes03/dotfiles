@@ -62,6 +62,7 @@ bar {
 # exec_always --no-startup-id pkill -SIGKILL -x polybar; polybar --log=warning >/dev/null
 
 exec --no-startup-id picom
+exec --no-startup-id copyq
 
 # set wallpaper
 exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/8931694.jpg
