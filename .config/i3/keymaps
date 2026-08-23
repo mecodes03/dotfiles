@@ -129,7 +129,9 @@ bindsym $mod+r mode "resize"
 # FKeys
 
 ## Take Screenshot Using Flameshot
-bindsym Print exec flameshot gui --path /home/mecodes/Pictures/sc
+# bindsym Print exec flameshot gui --clipboard --path /home/mecodes/Pictures/sc
+bindsym Print exec flameshot gui
+# bindsym Mod4+Shift+s exec flameshot gui # this works too, Mod4 is Windows key
 
 ## Mic/Audio Controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
