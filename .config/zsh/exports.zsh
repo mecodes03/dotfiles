@@ -10,7 +10,7 @@ SAVEHIST=100000
 export EDITOR="nvim"
 export VISUAL="nvim"
 export TERMINAL="kitty"
-export BROWSER="brave"
+export BROWSER="brave-browser"
 export MANPAGER='nvim +Man!'
 export MANWIDTH=999
 
