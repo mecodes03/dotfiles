@@ -45,6 +45,8 @@ alias cpy="cp"
 alias mvy='mv'
 alias rmy='rm'
 
+alias ytdlp='yt-dlp'
+
 # easier to read disk
 alias df='df -h'     # human-readable sizes
 alias free='free -m' # show sizes in MB
