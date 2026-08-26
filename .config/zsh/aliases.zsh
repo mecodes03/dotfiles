@@ -15,6 +15,8 @@ alias ls="eza"
 alias lsl="eza -l"
 alias lsa="eza -la"
 
+# kitty
+alias icat="kitten icat"
 # Tmux
 alias t="tmux"
 alias tls="t ls"
