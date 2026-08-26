@@ -31,7 +31,9 @@ bindkey '^f' tms-widget
 
 # play music
 play() {
-    mpv --no-video --ytdl-format=bestaudio "ytdl://ytsearch1:$*"
+  mpv --no-video --cookies=yes --ytdl-format=bestaudio "ytdl://ytsearch1:$*"
+}
+
 # set kitty terminal padding
 lpad() {
   kitten @ set-spacing padding-left=38
