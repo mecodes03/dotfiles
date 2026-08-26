@@ -9,6 +9,9 @@ alias zshrc='vim ~/dotfiles/.zshrc'
 alias zshconf='vim ~/dotfiles/.config/zsh/aliases.zsh'
 alias tmuxrc='vim ~/dotfiles/.config/tmux/tmux.conf'
 
+# BUG: this deosn't work, this is something related to username symbolic linking i guess.
+# alias dotrc ='vim ~/dotfiles/.zshrc'
+
 alias home="~"
 # List Files
 alias ls="eza"

@@ -17,7 +17,7 @@
 
 PERSONAL="/home/mecodes/vault/personal"
 WORK="/home/mecodes/vault/work"
-VAULT=$WORK  # default
+VAULT=$WORK # default
 
 show_help() {
   head -16 "$0" | grep "^#" | sed 's/^# \?//'
@@ -26,17 +26,17 @@ show_help() {
 
 # parse vault selection
 case "$1" in
-  p|personal)
-    VAULT=$PERSONAL
-    shift
-    ;;
-  w|work)
-    VAULT=$WORK
-    shift
-    ;;
-  -h|--help)
-    show_help
-    ;;
+p | personal)
+  VAULT=$PERSONAL
+  shift
+  ;;
+w | work)
+  VAULT=$WORK
+  shift
+  ;;
+-h | --help)
+  show_help
+  ;;
 esac
 
 # set current directory to $VAULT
@@ -45,48 +45,47 @@ cd $VAULT
 # parse options
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -i|--inbox)
-      nvim "$VAULT/inbox/inbox.md"
-      exit 0
-      ;;
-    -d|--daily)
-      DATE=$(date +%Y-%m-%d)
-      DAILY="$VAULT/notes/daily/$DATE.md"
-      if [ ! -f "$DAILY" ]; then
-        nvim "$DAILY"
-      fi
+  -i | --inbox)
+    nvim "$VAULT/inbox/inbox.md"
+    exit 0
+    ;;
+  -d | --daily)
+    DATE=$(date +%Y-%m-%d)
+    DAILY="$VAULT/notes/daily/$DATE.md"
+    if [ ! -f "$DAILY" ]; then
       nvim "$DAILY"
-      exit 0
-      ;;
-    -n|--new)
-      read -rp "Note name: " NAME
-      SLUG=$(echo "$NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-      DATE=$(date +%Y%m%d)
-      NOTE="$VAULT/notes/${DATE}-${SLUG}.md"
-      echo "# $NAME" > "$NOTE"
-      nvim "$NOTE"
-      exit 0
-      ;;
-    -s|--search)
-      nvim "$VAULT" -c "Telescope live_grep"
-      exit 0
-      ;;
-    -t|--todo)
-      nvim "$VAULT/inbox/inbox.md" -c "/- \[ \]"
-      exit 0
-      ;;
-    -h|--help)
-      show_help
-      ;;
-    *)
-      echo "unknown option: $1"
-      echo "run 'vault --help' for usage"
-      exit 1
-      ;;
+    fi
+    nvim "$DAILY"
+    exit 0
+    ;;
+  -n | --new)
+    read -rp "Note name: " NAME
+    SLUG=$(echo "$NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+    DATE=$(date +%Y%m%d)
+    NOTE="$VAULT/notes/${DATE}-${SLUG}.md"
+    echo "# $NAME" >"$NOTE"
+    nvim "$NOTE"
+    exit 0
+    ;;
+  -s | --search)
+    nvim "$VAULT" -c "Telescope live_grep"
+    exit 0
+    ;;
+  -t | --todo)
+    nvim "$VAULT/inbox/inbox.md" -c "/- \[ \]"
+    exit 0
+    ;;
+  -h | --help)
+    show_help
+    ;;
+  *)
+    echo "unknown option: $1"
+    echo "run 'vault --help' for usage"
+    exit 1
+    ;;
   esac
   shift
 done
 
 # default — open vault root
 nvim "$VAULT"
-
