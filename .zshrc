@@ -101,8 +101,10 @@ export PATH="/home/harsh/.local/bin:$PATH"
 # kimi-code
 export PATH="/home/harsh/.kimi-code/bin:$PATH"
 
-export NVM_DIR="$HOME/.nvm" # this doesn't hurt
+# grok
+export PATH="$HOME/.grok/bin:$PATH"
 
+export NVM_DIR="$HOME/.nvm" # this doesn't hurt
 ######## LAZY LOAD NVM TO REDUCE STARTUP TIME ########
 _lazy_nvm() {
   unset -f nvm node npm npx
