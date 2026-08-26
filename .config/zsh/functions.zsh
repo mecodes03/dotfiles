@@ -16,15 +16,15 @@
 
 # enable aws completions
 enc() {
-if command -v aws_completer &> /dev/null; then
-  complete -C '/usr/local/bin/aws_completer' aws
-fi
+  if command -v aws_completer &> /dev/null; then
+    complete -C '/usr/local/bin/aws_completer' aws
+  fi
 }
 
 # tms
 tms-widget() {
-BUFFER="tms switch";
-zle accept-line;
+  BUFFER="tms switch";
+  zle accept-line;
 }
 zle -N tms-widget
 bindkey '^f' tms-widget
