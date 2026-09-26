@@ -91,10 +91,6 @@ command -v fzf &>/dev/null && eval "$(fzf --zsh)"
 # zoxide (replaces cd)
 command -v zoxide &>/dev/null && eval "$(zoxide init --cmd cd zsh)"
 
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 # Added by Antigravity CLI installer
 export PATH="/home/harsh/.local/bin:$PATH"
 
@@ -113,6 +109,14 @@ _lazy_nvm() {
 }
 
 zsh-defer _lazy_nvm -C
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
+# eval "$(pyenv virtualenv-init -)" # Load pyenv-virtualenv automatically
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 ## BENCHMARK
 # zprof

@@ -36,7 +36,7 @@ play() {
 
 # set kitty terminal padding
 lpad() {
-  kitten @ set-spacing padding-left=38
+  kitten @ set-spacing padding-left=78
 }
 
 rpad() {

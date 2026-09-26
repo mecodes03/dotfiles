@@ -27,6 +27,7 @@ alias tks="t kill-session -t "
 
 alias k="kubectl"
 alias python="python3"
+alias pip="pip3"
 
 alias cdvault="cd ~/vault/work/"
 
