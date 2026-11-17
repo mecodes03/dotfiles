@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+
+# The session name will be the current directory name (e.g., "my-project")
+SESSION_NAME=$(basename "$PWD")
+
+# 1. Create the session in detached mode with the first window (Neovim)
+tmux new-session -d -s "$SESSION_NAME" -n "nvim" -c "$PWD"
+tmux send-keys -t "$SESSION_NAME:nvim" "vim" C-m
+
+# 2. Create the Terminal window (just a shell)
+tmux new-window -t "$SESSION_NAME" -n "term" -c "$PWD"
+
+# 3. Create the Opencode window
+tmux new-window -t "$SESSION_NAME" -n "ai" -c "$PWD"
+#BUG: (this doesn't work)
+tmux send-keys -t "$SESSION_NAME:ai" "/home/mecodes/.bun/bin/opencode" C-m
+
+# 4. Create the Notes (Obsidian) window
+#    → Adjust the path below to point to your Obsidian vault
+VAULT_PATH="~/vault/work"   # Change this if your vault is elsewhere
+tmux new-window -t "$SESSION_NAME" -n "notes" -c "$VAULT_PATH"
+tmux send-keys -t "$SESSION_NAME:notes" "nvim" C-m
+
+# 5. Create the btop window
+tmux new-window -t "$SESSION_NAME" -n "machine" -c "$PWD"
+tmux send-keys -t "$SESSION_NAME:machine" "btop" C-m
+
+# Focus the Neovim window and attach to the session
+tmux select-window -t "$SESSION_NAME:nvim"
+tmux attach -t "$SESSION_NAME"
